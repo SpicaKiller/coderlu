@@ -1,0 +1,75 @@
+27. 移除元素
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+        int slow = 0;
+        for(int fast = 0; fast < nums.size(); fast++){
+            if(nums[fast] != val){
+                nums[slow++] = nums[fast];
+            }
+        }
+        return slow;
+    }
+};
+
+209. 长度最小的子数组
+class Solution {
+public:
+    int minSubArrayLen(int target, vector<int>& nums) {
+        int res = INT32_MAX;
+        int sum = 0;
+        int i = 0;
+        int subLength = 0;
+        for(int j = 0; j < nums.size(); j++){
+            sum += nums[j];
+            while(sum >= target){
+                subLength = j - i + 1;
+                res = res < subLength ? res : subLength;
+                sum -= nums[i++];
+            }
+        }
+        return res == INT32_MAX ? 0 : res;
+    }
+};
+
+59. 螺旋矩阵 II
+class Solution {
+public:
+    vector<vector<int>> generateMatrix(int n) {
+        vector<vector<int>> res(n, vector<int>(n, 0));
+        int startx = 0, starty = 0;
+        int loop = n / 2;
+        int mid = n / 2;
+        int count = 1;
+        int offset = 1;
+        int i, j;
+        while(loop--){
+            i = startx, j = starty;
+
+            for(j = starty; j < n - offset; j++){
+                res[startx][j] = count++;
+            }
+
+            for(i = startx; i < n - offset; i++){
+                res[i][j] = count++;
+            }
+
+            for(;j > starty; j--){
+                res[i][j] = count++;
+            }
+
+            for(; i > startx; i--){
+                res[i][j] = count++;
+            }
+
+            starty++;
+            startx++;
+
+            offset += 1;
+        }
+        if(n % 2){
+            res[mid][mid] = count;
+        }
+        return res;
+    }
+};
