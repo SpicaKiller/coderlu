@@ -1,0 +1,77 @@
+242. 有效的字母异位词
+class Solution {
+public:
+    bool isAnagram(string s, string t) {
+        int record[26] = {0};
+        for(int i = 0; i < s.size(); i++){
+            record[s[i] - 'a']++;
+        }
+        for(int j = 0; j < t.size(); j++){
+            record[t[j] - 'a']--;
+        }
+        for(int i = 0; i < 26; i++){
+            if(record[i] != 0)
+                return false;
+        }
+        return true;
+    }
+};
+
+349. 两个数组的交集
+class Solution {
+public:
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+        unordered_set<int> res_set;
+        unordered_set<int> nums_set(nums1.begin(), nums1.end());
+        for(auto num : nums2){
+            if(nums_set.find(num) != nums_set.end()){
+                res_set.insert(num);
+            }
+        }
+        return vector<int>(res_set.begin(), res_set.end());
+    }
+};
+
+202. 快乐数
+class Solution {
+public:
+    int getSum(int n){
+        int sum = 0;
+        while(n){
+            sum += (n % 10) * (n % 10);
+            n /= 10;
+        }
+        return sum;
+    }
+    bool isHappy(int n) {
+        unordered_set<int> set;
+        while(1){
+        int sum = getSum(n);
+        if(sum == 1){
+            return true;
+        }
+        if(set.find(sum) != set.end()){
+            return false;
+        }else{
+            set.insert(sum);
+        }
+        n = sum;}
+        
+    }
+};
+
+1. 两数之和
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        unordered_map<int, int> map;
+        for(int i = 0; i < nums.size(); i++){
+            auto iter = map.find(target - nums[i]);
+            if(iter != map.end()){
+                return {iter -> second, i};
+            }               
+            map.insert(pair<int, int>(nums[i], i));
+        }
+        return {};
+    }
+};
