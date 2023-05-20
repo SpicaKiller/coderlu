@@ -1,0 +1,64 @@
+20. 有效的括号
+class Solution {
+public:
+    bool isValid(string s) {
+        if(s.size() % 2 != 0) return false;
+        stack<char> stk;
+        for(int i = 0; i < s.size(); i++){
+            if(s[i] == '(') stk.push(')');
+            else if(s[i] == '[') stk.push(']');
+            else if(s[i] == '{') stk.push('}');
+            else if(stk.empty() || stk.top() != s[i]) return false;
+            else stk.pop();
+        }
+        return stk.empty();
+
+    }
+};
+
+1047. 删除字符串中的所有相邻重复项
+class Solution {
+public:
+    string removeDuplicates(string s) {
+        stack<char> st;
+        for(auto a : s){
+            if(st.empty() || st.top() != a){
+                st.push(a);
+            }else{
+                st.pop();
+            }
+        }
+        string res;
+        while(!st.empty()){
+            res += st.top();
+            st.pop();
+        }
+        reverse(res.begin(), res.end());
+        return res;
+    }
+};
+
+150. 逆波兰表达式求值
+class Solution {
+public:
+    int evalRPN(vector<string>& tokens) {
+        stack<long long> stk;
+        for(int i = 0; i < tokens.size(); i++){
+            if(tokens[i] == "+" || tokens[i] == "-" || tokens[i] == "*" || tokens[i] == "/"){
+                long long num1 = stk.top();
+                stk.pop();
+                long long num2 = stk.top();
+                stk.pop();
+                if(tokens[i] == "+") stk.push(num2 + num1);
+                if(tokens[i] == "-") stk.push(num2 - num1);
+                if(tokens[i] == "*") stk.push(num2 * num1);
+                if(tokens[i] == "/") stk.push(num2 / num1);
+            }else{
+                stk.push(stoll(tokens[i]));
+            }
+        }
+        int res = stk.top();
+        stk.pop();
+        return res;
+    }
+};
