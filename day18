@@ -1,0 +1,79 @@
+513. 找树左下角的值
+class Solution {
+public:
+    int findBottomLeftValue(TreeNode* root) {
+        queue<TreeNode*> que;
+        if(root != nullptr) que.push(root);
+        int res = 0;
+        while(!que.empty()){
+            int size = que.size();
+            for(int i = 0; i < size; i++){
+                TreeNode* node = que.front();
+                que.pop();
+                if(i == 0) res = node -> val;
+                if(node -> left) que.push(node -> left);
+                if(node -> right) que.push(node -> right);
+            }
+        } 
+        return res;
+    }
+};
+
+112. 路径总和
+class Solution {
+public:
+    bool traversal(TreeNode* cur, int count){
+        if(!cur -> left && !cur -> right && count == 0) return true;
+        if(!cur -> left && !cur -> right) return false;
+
+        if(cur -> left){
+            count -= cur -> left -> val;
+            if(traversal(cur -> left, count)) return true;
+            count += cur ->left -> val; 
+        }
+        if(cur -> right){
+            count -= cur -> right -> val;
+            if(traversal(cur -> right, count)) return true;
+            count += cur ->right -> val; 
+        }
+
+        return false;
+    }
+    bool hasPathSum(TreeNode* root, int targetSum) {
+        if(root == nullptr) return false; 
+        return traversal(root, targetSum - root -> val);
+    }
+};
+
+106. 从中序与后序遍历序列构造二叉树
+class Solution {
+private:
+    TreeNode* traversal (vector<int>& inorder,  vector<int>& postorder) {
+        if(postorder.size() == 0) return nullptr;
+        int rootValue = postorder[postorder.size() - 1];
+        TreeNode* root = new TreeNode(rootValue);
+
+        if(postorder.size() == 1) return root;
+
+        int delimiterIndex;
+        for(delimiterIndex = 0; delimiterIndex < inorder.size(); delimiterIndex++){
+            if(inorder[delimiterIndex] == rootValue) break;
+        }
+        
+        vector<int> leftInorder(inorder.begin(), inorder.begin() + delimiterIndex);
+        vector<int> rightInorder(inorder.begin() + delimiterIndex + 1, inorder.end());
+        postorder.resize(postorder.size() - 1);
+
+        vector<int> leftPostorder(postorder.begin(), postorder.begin() + leftInorder.size());
+        vector<int> rightPostorder(postorder.begin() + leftInorder.size(), postorder.end());
+
+        root -> left = traversal(leftInorder, leftPostorder);
+        root -> right = traversal(rightInorder, rightPostorder);
+        return root;
+    }
+public:
+    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+        if(inorder.size() == 0 || postorder.size() == 0) return nullptr;
+        return traversal(inorder, postorder);
+    }
+};
