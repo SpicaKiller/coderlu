@@ -1,0 +1,64 @@
+110.平衡二叉树
+class Solution {
+public:
+    int getHeight(TreeNode* node){
+        if(node == nullptr) return 0;
+        int LeftHeight = getHeight(node -> left);
+        if(LeftHeight == -1) return -1;
+        int RightHeight = getHeight(node -> right);
+        if(RightHeight == -1) return -1;
+        return abs(LeftHeight - RightHeight) > 1 ? -1 : 1 + max(LeftHeight,RightHeight);
+    }
+    bool isBalanced(TreeNode* root) {
+        return getHeight(root) == -1? false: true;
+    }
+};
+
+257. 二叉树的所有路径
+class Solution {
+public:
+    void traversal(TreeNode* cur, vector<int> &path, vector<string> &res){
+        path.push_back(cur -> val);
+        if(cur -> left == nullptr && cur -> right == nullptr){
+            string sPath;
+            for(int i = 0; i < path.size() - 1; i++){
+                sPath += to_string(path[i]);
+                sPath += "->";
+            }
+            sPath += to_string(path[path.size() - 1]);
+            res.push_back(sPath);
+            return;
+        }
+        if(cur -> left){
+            traversal(cur ->left, path, res);
+            path.pop_back();
+        }
+         if(cur -> right){
+            traversal(cur ->right, path, res);
+            path.pop_back();
+        }
+    }
+    vector<string> binaryTreePaths(TreeNode* root) {
+        vector<string> res;
+        vector<int> path;
+        if(root == nullptr) return res;
+        traversal(root, path, res);
+        return res;
+    }
+};
+
+404. 左叶子之和
+class Solution {
+public:
+    int sumOfLeftLeaves(TreeNode* root) {
+        if(root ==  nullptr) return 0;
+        if(root -> left == nullptr && root -> right == nullptr) return 0;
+        int LeftVal = sumOfLeftLeaves(root -> left);
+        if(root -> left && !root -> left -> left && !root -> left -> right){
+            LeftVal = root -> left -> val;
+        }
+        int RightVal = sumOfLeftLeaves(root -> right);
+        int sum = LeftVal + RightVal;
+        return sum;
+    }
+};
