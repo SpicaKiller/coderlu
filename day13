@@ -1,0 +1,71 @@
+239. 滑动窗口最大值
+class Solution {
+
+private:
+    class MyQueue{
+        public:
+            deque<int> que;
+            void pop(int value){
+                if(!que.empty() && que.front() == value){
+                    que.pop_front();
+                }
+            }
+
+            void push(int value){
+                while(!que.empty() && que.back() < value){
+                    que.pop_back();
+                }
+                que.push_back(value);
+            }
+
+            int front(){
+                return que.front();
+            }
+    };
+public:
+    vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+        MyQueue que;
+        vector<int> res;
+        for(int i = 0; i < k; i++){
+            que.push(nums[i]);
+        }
+        res.push_back(que.front());
+        for(int i = k; i < nums.size(); i++){
+            que.pop(nums[i - k]);
+            que.push(nums[i]);
+            res.push_back(que.front());
+        }
+        return res;
+    }
+};
+
+347. 前 K 个高频元素
+class Solution {
+public:
+    class mycomparison{
+    public:
+        bool operator()(const pair<int, int> &lhs, const pair<int, int> &rhs){
+            return lhs.second > rhs.second;
+        }
+
+    };
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        unordered_map<int, int> map;
+        for(auto num: nums){
+            map[num]++;
+        }
+        priority_queue<pair<int, int>, vector<pair<int, int>>, mycomparison> pri_que;
+        for(unordered_map<int, int>::iterator it = map.begin(); it != map.end(); it++){
+            pri_que.push(*it);
+            if(pri_que.size() > k){
+                pri_que.pop();
+            }
+        }
+        vector<int> res(k);
+        for(int i = k - 1; i >= 0; i--){
+            res[i] = pri_que.top().first;
+            pri_que.pop();
+        }
+        return res;
+    }
+};
