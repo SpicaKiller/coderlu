@@ -1,0 +1,69 @@
+102. 二叉树的层序遍历
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        queue<TreeNode*> que;
+        if(root != nullptr) que.push(root);
+        vector<vector<int>> res;
+        while(!que.empty()){
+            int size = que.size();
+            vector<int> vec;
+            for(int i = 0; i < size; i++){
+                TreeNode* node = que.front();
+                que.pop();
+                vec.push_back(node -> val);
+                if(node -> left) que.push(node -> left);
+                if(node -> right) que.push(node -> right);
+
+            }
+            res.push_back(vec);
+        }
+        return res;
+    }
+};
+
+226. 翻转二叉树
+class Solution {
+public:
+    TreeNode* invertTree(TreeNode* root) {
+        stack<TreeNode*> st;
+        if(root != nullptr) st.push(root);
+        while(!st.empty()){
+            TreeNode* node = st.top();
+            if(node != nullptr){
+                st.pop();
+                if(node -> right) st.push(node -> right);
+                if(node -> left) st.push(node -> left);
+                st.push(node);
+                st.push(nullptr);
+            }else{
+                st.pop();
+                node =st.top();
+                st.pop();
+                swap(node ->left,node -> right);
+
+            }
+        }
+        return root;
+    }
+};
+
+101. 对称二叉树
+class Solution {
+public:
+    bool compare(TreeNode* left, TreeNode* right){
+        if(left == nullptr && right == nullptr) return true;
+        else if(left == nullptr && right != nullptr) return false;
+        else if(left != nullptr && right == nullptr) return false;
+        else if(left -> val != right -> val) return false;
+
+        bool outSide = compare(left -> left, right -> right);
+        bool inSide = compare(left -> right, right -> left);
+        bool isSame = inSide && outSide;
+        return isSame;
+    }
+    bool isSymmetric(TreeNode* root) {
+        if(root == nullptr) return false;
+        return compare(root -> left, root -> right);
+    }
+};
